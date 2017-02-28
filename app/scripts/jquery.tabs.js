@@ -1,4 +1,4 @@
-
+'use strict';
 
 ; (function ($, window, undefined) {
 
@@ -31,12 +31,6 @@
         _this.activeTab;
         _this.previousTabs = [];
 
-        _this.contentContainer.height(function () {
-            var _id = _this.addTab({ id: 'calcHeight',title:'<span>&nbsp;</span>',content:'<span>&nbsp;</span>' });
-            var _height = $element.height() - _this.tabContainer.outerHeight(true);
-            _this.closeTab(_id);
-            return _height;
-        });
         _this.leftBtn.on('click', function () {
             _this._left();
             return false;
@@ -47,7 +41,19 @@
             return false;
         });
 
+        _this._resizeTab();
         $(window).on('resize', $.proxy(_this._resizeTab, _this));
+    }
+
+    BootStrapTabs.prototype.getTabs = function () {
+        var _this = this,
+            _tabContainer = _this.tabContainer;
+
+        var _items = [];
+        $('li>a[data-toggle="tab"]', _tabContainer).each(function () {
+            _items.push($(this).data('prototype').id);
+        });
+        return _items;
     }
 
     BootStrapTabs.prototype.addTab = function (args, callback) {
@@ -74,7 +80,7 @@
                 'href': '#' + 'target_' + _args.id,
                 'id': 'tab_' + _args.id,
                 'aria-controls': 'target_' + _args.id
-            }).html(_args.title);
+            }).data('prototype', args).html(_args.title);
 
             _aTarget.on('shown.bs.tab', function (e) {
                 _this.activeTab = $(e.target).attr('aria-controls');
@@ -166,6 +172,10 @@
         else {
             _leftBtn.css({ display: 'none' });
         }
+
+        _this.contentContainer.height(function () {
+            return $(_this.element).height() - _this.tabContainer.outerHeight(true);     
+        });
 
         if (!$('li[role="presentation"]', _tabContainer).length) {
             _tabContainer.hide();

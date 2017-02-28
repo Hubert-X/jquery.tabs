@@ -24,17 +24,22 @@ $(function () {
         position: 'bottom'
     });
 
-    var _content = $('<a href="#">Add Tab</a>');
+    var _content = $('<div><a id="addTab" href="#">Add Tab</a>&nbsp;&nbsp;<a id="getTabs" href="#">Get Tabs</a></div>');
     var index = 0;
-    _content.on('click', function () {
+    _content.on('click', '#addTab',function () {
         bootstrapTabs2.bootstrapTabs('addTab', {
-            id: '000' + index,
-            title: 'Tab_' + ++index,
+            id: 'tab_0' + ++index,
+            title: '标签_' + index,
             content: new Date(),
             close: index%2
         });
         return false;
+    }).on('click','#getTabs',function(){
+        var items = bootstrapTabs2.bootstrapTabs('getTabs');
+        alert(JSON.stringify(items));
     })
+
+
     bootstrapTabs.bootstrapTabs('addTab', {
         title: 'AddTab',
         content: _content
